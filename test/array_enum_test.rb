@@ -22,6 +22,16 @@ class ArrayEnumTest < Minitest::Test
     assert_match(/black is not a valid value for favourite_colors/, error.message)
   end
 
+  def test_blank_value_does_not_raise_on_assignment
+    user = User.new(favourite_colors: [''])
+    assert_instance_of User, user
+  end
+
+  def test_unknown_value_does_not_raise_on_assignment
+    user = User.new(favourite_colors: ['black'])
+    assert_instance_of User, user
+  end
+
   def test_storing_values_as_integers
     user = User.create!(favourite_colors: ['red'])
     user.reload
