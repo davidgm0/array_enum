@@ -30,6 +30,9 @@ ActiveRecord::Schema.define do
   end
 end
 
+# Mimic constant assigment from railtie
+SubsetValidator = ArrayEnum::SubsetValidator
+
 class User < ActiveRecord::Base
   extend ArrayEnum
   has_many :profiles
@@ -42,5 +45,10 @@ class Profile < ActiveRecord::Base
   array_enum favourite_colors: { 'red' => 1, 'blue' => 2, 'green' => 3 }
 end
 
-# Mimic constant assigment from railtie
-SubsetValidator = ArrayEnum::SubsetValidator
+class ValidatedUser < ActiveRecord::Base
+  extend ArrayEnum
+  self.table_name = 'users'
+
+  array_enum favourite_colors: { 'red' => 1, 'blue' => 2, 'green' => 3 }
+  validates :favourite_colors, subset: { in: %w[red blue green] }
+end

@@ -15,11 +15,9 @@ class ArrayEnumTest < Minitest::Test
     assert_equal %w[red blue], user.favourite_colors
   end
 
-  def test_raising_error_on_unknown_value
-    error = assert_raises(ArgumentError) do
-      User.new(favourite_colors: ['black'])
-    end
-    assert_match(/black is not a valid value for favourite_colors/, error.message)
+  def test_unknown_value_results_in_nil_in_array
+    user = User.new(favourite_colors: ['black'])
+    assert_includes user.favourite_colors, nil
   end
 
   def test_blank_value_does_not_raise_on_assignment
@@ -30,6 +28,16 @@ class ArrayEnumTest < Minitest::Test
   def test_unknown_value_does_not_raise_on_assignment
     user = User.new(favourite_colors: ['black'])
     assert_instance_of User, user
+  end
+
+  def test_blank_value_is_caught_by_subset_validation
+    user = ValidatedUser.new(favourite_colors: [''])
+    refute user.valid?
+  end
+
+  def test_unknown_value_is_caught_by_subset_validation
+    user = ValidatedUser.new(favourite_colors: ['black'])
+    refute user.valid?
   end
 
   def test_storing_values_as_integers

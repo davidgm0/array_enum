@@ -35,9 +35,7 @@ module ArrayEnum
       end
 
       define_method("#{attr_name}=".to_sym) do |values|
-        self[attr_symbol] = Array(values).map do |value|
-          mapping_hash[value] || raise(ArgumentError, format(MISSING_VALUE_MESSAGE, value: value, attr: attr_name))
-        end.uniq
+        self[attr_symbol] = Array(values).map { |value| mapping_hash[value] }.uniq
       end
     end
   end
